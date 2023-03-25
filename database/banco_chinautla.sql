@@ -278,58 +278,6 @@ REFERENCES caja (id_caja) ENABLE;
 
 
 /*
--- Estados de cuenta por rango de fechas y cuenta
-SELECT 
-op.fecha, t_op.descripcion, t_do.descripcion, op.id_documento, es.descripcion, op.id_cheque, op.descripcion, op.monto
-FROM
-operacion op
-INNER JOIN
-tipo_operacion t_op
-ON 
-t_op.id_tipo_operacion = op.id_tipo_operacion
-INNER JOIN
-tipo_documento t_do
-ON 
-t_do.id_tipo_documento = op.id_tipo_documento
-INNER JOIN
-estado es
-ON 
-es.id_estado = op.id_estado
-WHERE
-op.id_cuenta = $1;
-
-
-
-
--- Resumen de cuentas por agencia: No. Cuenta, tipo, nombre, estatus, saldo disponible y en reserva.
-SELECT
-cu.id_cuenta, t_cu.descripcion, cl.nombre, cu.activa, (SELECT SUM(op.ammount)
-        FROM operacion op
-        WHERE cu.id_cuenta = op.id_cuenta
-       )
-FROM cuenta cu
-INNER JOIN tipo_cuenta t_cu
-ON  t_cu.id_tipo_cuenta = cu.id_tipo_cuenta
-INNER JOIN cliente cl
-ON cl.id_cliente = cu.id_cliente
-WHERE cu.id_agencia = $1;
-
-
--- Resumen de pago de planilla: Fecha y hora, cuenta de origen, monto inicial, monto final.
-SELECT 
-pl.fecha_hora, 
-FROM
-INNER JOIN
-ON
-WHERE
-
-
--- Detalle pago de planilla: cuenta origen, cuenta destino, monto pagando, descripcion si algo no sale bien
-
-
--- Estadisticas de operaciones por agencia: fecha de operacion, tipo de operacion (credito/debito) y monto total.
-
-
--- pendientes
-        completar primeros reportes.
+TODO:
+Empezar a trabajar en los reportes del requerimiento original.
 */
