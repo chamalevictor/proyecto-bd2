@@ -112,7 +112,8 @@ CREATE TABLE documento (
     id_correlativo NUMBER,
     id_aleatorio NUMBER,
     id_chequera NUMBER,
-    bloqueado NUMBER(1) -- 0 false, 1 true.
+    bloqueado NUMBER(1), -- 0 false, 1 true.
+    rechazado NUMBER(1) -- 0 false, 1 true.
 );
 ALTER TABLE documento MODIFY (id_documento NOT NULL ENABLE);
 ALTER TABLE documento ADD CONSTRAINT pk_documento PRIMARY KEY (id_documento) ENABLE;
