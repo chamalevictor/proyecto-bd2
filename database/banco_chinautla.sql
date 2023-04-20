@@ -155,7 +155,7 @@ REFERENCES modulo (id_modulo) ENABLE;
 
 CREATE TABLE rol (
     id_rol NUMBER,
-    descripcion VARCHAR2(32)
+    descripcion VARCHAR2(64)
 );
 ALTER TABLE rol MODIFY (id_rol NOT NULL ENABLE);
 ALTER TABLE rol ADD CONSTRAINT pk_rol PRIMARY KEY (id_rol) ENABLE;
