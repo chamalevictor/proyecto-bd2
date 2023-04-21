@@ -77,7 +77,7 @@ CREATE TABLE cuenta (
     firma_1 VARCHAR2(128),
     firma_2 VARCHAR2(128),
     firma_3 VARCHAR2(128),
-    activa NUMBER(1), -- 0 false, 1 true
+    activa NUMBER(1) -- 0 false, 1 true
 );
 ALTER TABLE cuenta MODIFY (id_tipo_cuenta, id_agencia, correlativo, aleatorio NOT NULL ENABLE);
 ALTER TABLE cuenta ADD CONSTRAINT pk_cuenta PRIMARY KEY (id_tipo_cuenta, id_agencia, correlativo, aleatorio) ENABLE;
@@ -179,7 +179,7 @@ CREATE TABLE usuario (
     apellido VARCHAR2(32),
     correo VARCHAR2(64),
     id_rol NUMBER,
-    activo NUMBER(1), -- 0 false, 1 true
+    activo NUMBER(1) -- 0 false, 1 true
 );
 ALTER TABLE usuario MODIFY (id_usuario NOT NULL ENABLE);
 ALTER TABLE usuario ADD CONSTRAINT pk_usuario PRIMARY KEY (id_usuario) ENABLE;

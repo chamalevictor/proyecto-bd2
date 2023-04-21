@@ -33,7 +33,7 @@ CREATE SEQUENCE modulo_seq
     CACHE 2;
 commit;
 
-INSERT INTO modulo (modulo_seq.nextval, '')
+
 
 
 
