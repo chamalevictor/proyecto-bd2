@@ -65,7 +65,6 @@ ALTER TABLE tipo_cuenta ADD CONSTRAINT pk_t_cuenta PRIMARY KEY (id_tipo_cuenta);
 ALTER TABLE tipo_cuenta ADD CONSTRAINT fk_interes FOREIGN KEY (id_interes)
 REFERENCES interes (id_interes) ENABLE;
 
-
 CREATE TABLE cuenta (
     id_tipo_cuenta NUMBER,
     id_agencia NUMBER,
@@ -76,10 +75,9 @@ CREATE TABLE cuenta (
     activa NUMBER(1), -- 0 false, 1 true
     firma_1 VARCHAR2(128),
     firma_2 VARCHAR2(128),
-    firma_3 VARCHAR2(128),
-    activa NUMBER(1) -- 0 false, 1 true
+    firma_3 VARCHAR2(128)
 );
-ALTER TABLE cuenta MODIFY (id_tipo_cuenta, id_agencia, correlativo, aleatorio NOT NULL ENABLE);
+ALTER TABLE cuenta MODIFY (id_tipo_cuenta NOT NULL , id_agencia NOT NULL , correlativo NOT NULL , aleatorio NOT NULL ENABLE);
 ALTER TABLE cuenta ADD CONSTRAINT pk_cuenta PRIMARY KEY (id_tipo_cuenta, id_agencia, correlativo, aleatorio) ENABLE;
 ALTER TABLE cuenta ADD CONSTRAINT fk_cuenta_t_cuenta FOREIGN KEY (id_tipo_cuenta) 
 REFERENCES tipo_cuenta (id_tipo_cuenta) ENABLE;
@@ -279,6 +277,7 @@ REFERENCES agencia (id_agencia) ENABLE;
 ALTER TABLE bitacora ADD CONSTRAINT fk_b_caja FOREIGN KEY (id_caja)
 REFERENCES caja (id_caja) ENABLE;
 
+commit;
 
 /*
 TODO:
