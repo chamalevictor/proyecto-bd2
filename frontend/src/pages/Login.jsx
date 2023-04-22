@@ -55,7 +55,7 @@ const Login = () => {
 
   return (
     <>
-      <div className="w-full flex ">
+      <div className="w-full flex justify-center">
         <img src={logo} alt="Logo" />
       </div>
       {msg && <Alerta alerta={alerta} />}
