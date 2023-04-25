@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.modules img {
+  width: 100%;
+  aspect-ratio: 3/2;
+  object-fit: cover;
+}

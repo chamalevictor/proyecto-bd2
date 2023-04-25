@@ -1,16 +1,13 @@
 const Modules = ({ img, moduleName }) => {
   return (
     <>
-      <div class="max-w-sm bg-white border border-gray-200 rounded-lg shadow-lg dark:bg-gray-800 dark:border-gray-700">
-        <a href="#">
-          <img class="rounded-t-lg" src={img} alt="" />
-        </a>
+      <div class="transition ease-in-out hover:scale-105 modules  max-w-sm  bg-white border border-gray-200 rounded-lg shadow-2xl  dark:bg-gray-200 dark:border-gray-700">
+        <img class="rounded-t-lg " src={img} alt="" />
+
         <div class="p-5">
-          <a href="#">
-            <h5 class="text-center mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-              {moduleName}
-            </h5>
-          </a>
+          <h5 class="text-center mb-2 text-2xl font-bold text-gray-900 dark:text-green-700">
+            {moduleName}
+          </h5>
         </div>
       </div>
     </>
