@@ -42,13 +42,13 @@ const Login = () => {
 
   return (
     <>
-      <div className="w-full flex justify-center">
+      <div className="w-full flex justify-center bt-10 mb-6">
         <img src={logo} alt="Logo" />
       </div>
       {msg && <Alerta alerta={alerta} />}
       <form
         onSubmit={handleSubmit}
-        className="mb-10 bg-white shadow rounded-lg px-10 py-10"
+        className="mb-5 bg-white shadow rounded-lg px-10 pt-10 pb-5  "
       >
         <div className="my-5">
           <label
