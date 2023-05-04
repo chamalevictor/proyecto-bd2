@@ -81,9 +81,81 @@ END IF;
 
 WHEN OTHERS THEN
         msg := 'Error: ' || SQLERRM;
+                        
+END;
+/
 
+
+
+-- Autenticar Usuario
+CREATE OR REPLACE PROCEDURE AUTENTICAR_USUARIO(correo_usuario VARCHAR2, contrasena OUT VARCHAR2, usuario_consultado OUT usuario%ROWTYPE, msg OUT VARCHAR2, exito OUT NUMBER)
+AS
+    usuario_no_existe EXCEPTION;
+    usuario_no_activo EXCEPTION;
+    usuario_record usuario%ROWTYPE;
+
+BEGIN
+
+    SELECT * INTO usuario_record FROM usuario WHERE correo = correo_usuario;
+
+ -- Verificar si el usuario esta activo
+
+IF usuario_record.correo IS NULL THEN
+        RAISE usuario_no_existe;
+ELSIF
+(usuario_record.activo = 0)
+    THEN
+        RAISE usuario_no_activo;
+
+-- Si existe existe, devuelve el password
+ELSE
+        contrasena := usuario_record.contrasena;
+        usuario_consultado := usuario_record;
+        msg := 'Se ha autenticado con exito';
+        exito := 1;
+END IF;
+
+    EXCEPTION
+    WHEN usuario_no_activo THEN
+            msg := 'La cuenta no se encuentra activa';
+        exito:= 0;
+    WHEN usuario_no_existe THEN
+            msg := 'No existe una cuenta creada para este usuario';
+        exito:= 0;
+    WHEN NO_DATA_FOUND THEN
+            msg := 'No existe una cuenta creada para este usuario';
+        exito:= 0;
+WHEN OTHERS THEN
+        msg := 'Error: ' || SQLERRM;
+END;
+/
+
+declare
+msg VARCHAR2(100);
+exito NUMBER;
+contrasena VARCHAR2(100);
+usuario_buscado usuario%ROWTYPE;
+
+begin
+    AUTENTICAR_USUARIO('victor.chamale@bancochinautla.com', contrasena, usuario_buscado, msg, exito);
+    DBMS_OUTPUT.PUT_LINE(usuario_buscado.correo);
+end;
+
+select * from usuario;
+update usuario set id_rol = 1 where id_usuario = 1;
+commit;
+
+
+
+CREATE OR REPLACE PROCEDURE PRUEBA(prueba_out OUT usuario%ROWTYPE)
+AS
+BEGIN
+    SELECT * INTO prueba_out FROM usuario WHERE id_usuario = 1;
 END;
 
-
-
-    select * from usuario;
+declare
+    otra_prueba usuario%rowtype;
+begin
+    prueba(otra_prueba);
+    DBMS_OUTPUT.PUT_LINE(otra_prueba.nombre);
+end;

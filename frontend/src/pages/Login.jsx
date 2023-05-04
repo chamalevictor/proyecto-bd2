@@ -1,9 +1,19 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../features/usuariosServices";
+import { useSelector, useDispatch } from "react-redux";
+import { usuarioActions } from "../features/usuariosSlice";
 import Alerta from "../componentes/Alerta";
 import logo from "../img/banco-chinautla-logo.png";
 
 const Login = () => {
+  const {
+    usuarios,
+    alerta: alertaRedux,
+    autenticado,
+  } = useSelector((state) => state.usuarios);
+  const dispatch = useDispatch();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [alerta, setAlerta] = useState({});
@@ -21,26 +31,38 @@ const Login = () => {
       return;
     }
 
-    if ([password].includes("1234")) {
-      navigate("dashboard");
-    }
     if (email.split("@")[1] !== "bancochinautla.com") {
+      console.log("se mete");
       setAlerta({
-        msg: "Debe utilizar una cuenta de la organización",
+        msg: "Debe utilizar una cuenta de la organizacion",
         error: true,
       });
       return;
     }
+
+    dispatch(loginUser({ email, password })); // Autentica al usuario
   };
 
   useEffect(() => {
-    setAlerta({
-      msg: "",
-      error: false,
-    });
-  }, [email, password]);
+    if (autenticado) {
+      localStorage.setItem("token", usuarios.token);
+      navigate("/dashboard");
+    }
+    return () => {
+      setAlerta({
+        msg: "",
+        error: false,
+      });
+    };
+  }, [autenticado]);
 
   const { msg } = alerta;
+  useEffect(() => {
+    console.log(alertaRedux);
+    setAlerta({
+      alertaRedux,
+    });
+  }, [alertaRedux]);
 
   return (
     <>

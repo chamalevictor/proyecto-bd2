@@ -53,39 +53,66 @@ const crearUsuario = async (req, res) => {
 
 // Authenticate user.
 const autenticarUsuario = async (req, res) => {
-  const { correo, contrasena } = req.body;
+  const { email: correo_usuario, password } = req.body;
 
-  // Check if user exists
-  const existingUser = await pool.query(
-    `SELECT * FROM end_user WHERE email = $1`,
-    [email]
-  );
+  let connection;
+  let contrasenaHasheada;
 
-  if (existingUser.rows.length === 0) {
-    // If rows comes back empty, means no user was found with that email.
-    const error = new Error("No existe una cuenta creada para este usuario.");
-    return res.status(404).json({ msg: error.message });
-  }
-  // Check user is confirmed
-  if (!existingUser.rows[0].confirmed) {
-    const error = new Error(
-      "La cuenta para este usuario no ha sido confirmada."
+  try {
+    connection = await oracledb.getConnection({ poolAlias: "default" }); // Obtener conexion del pool
+    const result = await connection.execute(
+      // Llamar el procedimiento almacenado que se encarga
+      //   `BEGIN AUTENTICAR_USUARIO(:correo_usuario, :contrasena, :usuario_consultado, :msg, :exito); END;`, // de registrar un nuevo usuario
+      //   {
+      //     correo_usuario,
+      //     contrasena: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
+      //     usuario_consultado: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
+      //     msg: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
+      //     exito: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+      //   }
+      // );
+      // contrasenaHasheada = result.outBinds.contrasena;
+
+      `BEGIN PRUEBA(:prueba_out); END;`,
+      {
+        prueba_out: {
+          type: ARRAY.OUTPUTPARAMETERTABLE,
+          dir: oracledb.BIND_OUT,
+        },
+      }
     );
-    return res.status(404).json({ msg: error.message });
+
+    console.log(prueba_out.getRows());
+
+    // if (1 == 2) {
+    //   return;
+    // }
+  } catch (err) {
+    console.log(err);
+  } finally {
+    if (connection) {
+      try {
+        await connection.close(); // Devolver la conexion al pool.
+      } catch (err) {
+        console.error(err);
+      }
+    }
   }
+
   //Check user's password
   const authenticatePassword = async (password) => {
-    return await bcrypt.compare(password, existingUser.rows[0].password); // Compares password sent vs password in db.
+    return await bcrypt.compare(password, contrasenaHasheada); // Compares password sent vs password in db.
   };
 
   if (await authenticatePassword(password)) {
-    res.json({
-      id_end_user: existingUser.rows[0].id_end_user,
-      name: existingUser.rows[0].name,
-      lastname: existingUser.rows[0].lastname,
-      email: existingUser.rows[0].email,
-      token: generateJWT(existingUser.rows[0].id_end_user),
-    });
+    // res.json({
+    //   id_end_user: existingUser.rows[0].id_end_user,
+    //   name: existingUser.rows[0].name,
+    //   lastname: existingUser.rows[0].lastname,
+    //   email: existingUser.rows[0].email,
+    //   token: generateJWT(existingUser.rows[0].id_end_user),
+    // });
+    console.log("si se hizo la desencripcion con exito");
   } else {
     const error = new Error("La contraseña ingresada es incorrecta");
     return res.status(403).json({ msg: error.message });
