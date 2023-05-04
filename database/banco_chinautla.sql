@@ -177,7 +177,9 @@ CREATE TABLE usuario (
     apellido VARCHAR2(32),
     correo VARCHAR2(64),
     id_rol NUMBER,
-    activo NUMBER(1) -- 0 false, 1 true
+    activo NUMBER(1), -- 0 false, 1 true
+    contrasena VARCHAR2(100),
+    fecha_nac DATE
 );
 ALTER TABLE usuario MODIFY (id_usuario NOT NULL ENABLE);
 ALTER TABLE usuario ADD CONSTRAINT pk_usuario PRIMARY KEY (id_usuario) ENABLE;

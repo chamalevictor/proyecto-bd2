@@ -114,3 +114,13 @@ INSERT INTO estado VALUES (estado_seq.nextval, 'Exitosa');
 INSERT INTO estado VALUES (estado_seq.nextval, 'Fallida');
 INSERT INTO estado VALUES (estado_seq.nextval, 'Interrumpida');
 commit;
+
+
+-- Secuencia ids de usuarios
+CREATE SEQUENCE usuario_seq
+    INCREMENT BY 1
+    START WITH 2
+    MINVALUE 1
+    MAXVALUE 2000
+    NOCYCLE
+    CACHE 2;

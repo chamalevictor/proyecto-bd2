@@ -1,57 +1,59 @@
-// const registrar = (req, res) => {
-//   res.send("desde /api/usuarios");
-// };
-
-// export { registrar };
-
+import oracledb from "oracledb";
 import bcrypt from "bcrypt";
 import generarId from "../helpers/generarId.js";
 import generarJWT from "../helpers/generarJWT.js";
 import { singupEmail, forgotPasswordEmail } from "../helpers/email.js";
 
-// Create new User
-const createUser = async (req, res) => {
-  const { nombre, apellido, fecha_nac, correo } = req.body;
-  // Verify if user's email is already registered.
-  const existeUsuario = await oraclePool.query(
-    `SELECT * FROM end_user WHERE email = $1`,
-    [email]
-  );
+//oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 
-  if (existingUser.rows.length !== 0) {
-    const error = new Error("Usuario ya registrardo");
-    return res.status(400).json({ msg: error.message });
-  }
-  // If no records found, proceed to insert new user
+// Crear usuario nuevo
+const crearUsuario = async (req, res) => {
+  const { nombre, apellido, correo, id_rol, fecha_nac } = req.body;
+  const token = generarId();
+  let connection;
   try {
-    const salt = await bcrypt.genSalt(10);
-    const hashedPassword = await bcrypt.hash(password, salt);
-    const token = generarId();
-    const newUser = await pool.query(
-      `INSERT INTO end_user
-                  (name, lastname, dob, email, password, token)
-                  VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [name, lastname, dob, email, hashedPassword, token]
+    connection = await oracledb.getConnection({ poolAlias: "default" }); // Obtener conexion del pool
+    const result = await connection.execute(
+      // Llamar el procedimiento almacenado que se encarga
+      `BEGIN CREAR_USUARIO(:nombre, :apellido, :correo, :id_rol, :fecha_nac, :token, :msg, :exito); END;`, // de registrar un nuevo usuario
+      {
+        // Pasando los parametros
+        nombre,
+        apellido,
+        correo,
+        id_rol,
+        fecha_nac,
+        token,
+        // Binding de Parametros de salida del Procedimiento Almacenado
+        msg: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
+        exito: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+      }
     );
 
-    // Send confirmation email.
-
+    // Enviar correo de confirmacion
     singupEmail({
-      email,
-      name,
+      correo,
+      nombre,
       token,
     });
-
-    res.json({
-      msg: "Cuenta creada con éxito. Recibirás un correo con instrucciones",
-    });
-  } catch (error) {
-    console.log(error);
+    console.log(result.outBinds.msg);
+    res.json(result.outBinds);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    if (connection) {
+      try {
+        await connection.close(); // Devolver la conexion al pool.
+      } catch (err) {
+        console.error(err);
+      }
+    }
   }
 };
+
 // Authenticate user.
-const authenticateUser = async (req, res) => {
-  const { email, password } = req.body;
+const autenticarUsuario = async (req, res) => {
+  const { correo, contrasena } = req.body;
 
   // Check if user exists
   const existingUser = await pool.query(
@@ -91,28 +93,41 @@ const authenticateUser = async (req, res) => {
 };
 
 // Confirm Accounts
-const confirmAccount = async (req, res) => {
+const confirmarCuenta = async (req, res) => {
   const { token } = req.params;
-  const confirmUser = await pool.query(
-    // Confirm if token belongs to a user.
-    `SELECT * FROM end_user WHERE token = $1`,
-    [token]
-  );
-  if (confirmUser.rows.length === 0) {
-    // If rows comes back empty, it means that no user was found with that token.
-    const error = new Error("Token no válido.");
-    return res.status(404).json({ msg: error.message });
-  }
+  const { contrasena } = req.body;
 
+  let connection;
+
+  const salt = await bcrypt.genSalt(10);
+  const hashedNewPassword = await bcrypt.hash(contrasena, salt);
   try {
-    const confirmUserSuccess = await pool.query(
-      // Enable user confirmed and clear token.
-      `UPDATE end_user SET confirmed = true, token = '' WHERE id_end_user = $1`,
-      [confirmUser.rows[0].id_end_user]
+    connection = await oracledb.getConnection({ poolAlias: "default" }); // Obtener conexion del pool
+    const result = await connection.execute(
+      // Llamar el procedimiento almacenado que se encarga
+      `BEGIN CONFIRMAR_USUARIO(:hashedNewPassword, :token, :msg, :exito); END;`, // de registrar un nuevo usuario
+      {
+        // Pasando los parametros
+        hashedNewPassword,
+        token,
+        // Binding de Parametros de salida del Procedimiento Almacenado
+        msg: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
+        exito: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+      }
     );
-    res.json({ msg: "Usuario confirmado con éxito." });
-  } catch (error) {
-    console.log(error);
+
+    console.log(result.outBinds.msg);
+    res.json(result.outBinds);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    if (connection) {
+      try {
+        await connection.close(); // Devolver la conexion al pool.
+      } catch (err) {
+        console.error(err);
+      }
+    }
   }
 };
 // Forgot password.
@@ -196,9 +211,9 @@ const profile = async (req, res) => {
 };
 
 export {
-  createUser,
-  authenticateUser,
-  confirmAccount,
+  crearUsuario,
+  autenticarUsuario,
+  confirmarCuenta,
   forgotPassword,
   validateToken,
   newPassword,

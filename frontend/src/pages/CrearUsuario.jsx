@@ -1,19 +1,27 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Alerta from "../componentes/Alerta";
+import axiosClient from "../configs/axiosClient";
 
 const CrearUsuario = () => {
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [rol, setRol] = useState(0);
-  const [password, setPassword] = useState("");
-  const [repeatPassword, setRepeatPassword] = useState("");
+  const [nombreCompleto, setNombreCompleto] = useState("");
+  const [correo, setCorreo] = useState("");
+  const [fecha_nac, setfecha_nac] = useState(new Date());
+  const [id_rol, setid_rol] = useState(0);
   const [alerta, setAlerta] = useState({});
+
+  useEffect(() => {
+    setAlerta({
+      msg: "",
+      error: false,
+    });
+  }, [nombreCompleto, correo, fecha_nac, id_rol]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setFullName(fullName.trim()); // Borrando espacios extras del nombre
-    if (fullName.split(" ").length > 2) {
+
+    setNombreCompleto(nombreCompleto.trim()); // Borrando espacios extras del nombre
+    if (nombreCompleto.split(" ").length > 2) {
       // Solo debe haber 1 nombre y 1 apellido
       setAlerta({
         msg: "Ingresa solo un nombre y un apellido",
@@ -22,7 +30,15 @@ const CrearUsuario = () => {
       return;
     }
 
-    if ([fullName, email, password, repeatPassword].includes("")) {
+    if (correo.split("@")[1] !== "bancochinautla.com") {
+      setAlerta({
+        msg: "Debe utilizar una cuenta de la organización",
+        error: true,
+      });
+      return;
+    }
+
+    if ([nombreCompleto, correo].includes("") || [id_rol].includes("DEFAULT")) {
       // Checking for blank fields.
       setAlerta({
         msg: "Todos los campos son obligatorios",
@@ -31,60 +47,36 @@ const CrearUsuario = () => {
       return;
     }
 
-    if (password !== repeatPassword) {
-      setAlerta({
-        msg: "Las contraseñas no coinciden",
-        error: true,
-      });
-      return;
-    }
-
-    if (password.length < 6) {
-      // Checking for password length.
-      setAlerta({
-        msg: "La contraseña debe tener como mínimo 6 caractéres",
-        error: true,
-      });
-      return;
-    }
-
     setAlerta({});
 
-    // Create user in API
-    // try {
-    //   const name = fullName.split(" ")[0];
-    //   const lastname = fullName.split(" ")[1];
-    //   const { data } = await axiosClient.post(`/users`, {
-    //     name,
-    //     lastname,
-    //     dob,
-    //     email,
-    //     password,
-    //   });
+    // Crear usuario en API.
+    try {
+      const nombre = nombreCompleto.split(" ")[0];
+      const apellido = nombreCompleto.split(" ")[1];
+      const { data } = await axiosClient.post(`/usuarios`, {
+        nombre,
+        apellido,
+        fecha_nac,
+        correo,
+        id_rol,
+      });
 
-    //   setAlerta({
-    //     msg: data.msg,
-    //     error: false,
-    //   });
-
-    //   // Reset variables.
-    //   setFullName("");
-    //   setEmail("");
-    //   setDob(new Date());
-    //   setPassword("");
-    //   setRepeatPassword("");
-    // } catch (error) {
-    //   setAlerta({
-    //     msg: error.response.data.msg,
-    //     error: true,
-    //   });
-    // }
+      setAlerta({
+        msg: data.msg,
+        error: data.exito == 1 ? false : true,
+      });
+    } catch (error) {
+      setAlerta({
+        msg: error.response.data.msg,
+        error: true,
+      });
+    }
   };
 
   const { msg } = alerta;
   return (
     <div className="flex justify-center">
-      <div className="md:w-2/3 lg:w-2/5 mt-6 shadow-xl rounded-lg">
+      <div className="md:w-2/3 lg:w-2/5 mt-6  rounded-lg">
         <div className="text-center">
           <h1 className="text-green-600 font-black text-6xl capitalize">
             Crear Nuevo
@@ -96,7 +88,7 @@ const CrearUsuario = () => {
 
         <form
           onSubmit={handleSubmit}
-          className="my-10 bg-white rounded-lg px-10 pt-10"
+          className="my-10 bg-white rounded-lg shadow-lg px-10 pt-10 pb-3"
         >
           <div className="my-5">
             <label
@@ -110,14 +102,14 @@ const CrearUsuario = () => {
               placeholder="Un nombre y un apellido"
               className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
               id="name"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              value={nombreCompleto}
+              onChange={(e) => setNombreCompleto(e.target.value)}
             />
           </div>
           <div className="my-5">
             <label
               className="uppercase text-gray-600 block text-xl font-bold"
-              htmlFor="email"
+              htmlFor="correo"
             >
               Correo Electrónico
             </label>
@@ -125,15 +117,31 @@ const CrearUsuario = () => {
               type="email"
               placeholder="Correo empresarial de Banco Chinautla"
               className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
-              id="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              id="correo"
+              value={correo}
+              onChange={(e) => setCorreo(e.target.value)}
             />
           </div>
           <div className="my-5">
             <label
               className="uppercase text-gray-600 block text-xl font-bold"
-              htmlFor="dob"
+              htmlFor="fecha_nac"
+            >
+              Fecha de nacimiento
+            </label>
+            <input
+              type="date"
+              placeholder="Eorreo de registro"
+              className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
+              id="fecha_nac"
+              value={fecha_nac}
+              onChange={(e) => setfecha_nac(e.target.value)}
+            />
+          </div>
+          <div className="my-5">
+            <label
+              className="uppercase text-gray-600 block text-xl font-bold"
+              htmlFor="id_rol"
             >
               Rol de Usuario
             </label>
@@ -141,7 +149,7 @@ const CrearUsuario = () => {
               id="id_rol"
               className="border w-full p-2 mt-2 placeholder-gray-400 rounded-md "
               defaultValue={"DEFAULT"}
-              onChange={(e) => setRol(e.target.value)}
+              onChange={(e) => setid_rol(e.target.value)}
             >
               <option value="DEFAULT" disabled>
                 -- Seleccione un Rol --

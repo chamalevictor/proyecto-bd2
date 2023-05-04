@@ -1,6 +1,7 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import AuthLayout from "./layouts/AuthLayout";
 import Login from "./pages/Login";
+import ConfirmarCuenta from "./pages/ConfirmarCuenta";
 import Dashboard from "./pages/Dashboard";
 import Usuarios from "./pages/Usuarios";
 import ProtectedRoutes from "./layouts/ProtectedRoutes";
@@ -13,6 +14,8 @@ function App() {
         {/* Public Routes */}
         <Route path="/" element={<AuthLayout />}>
           <Route index element={<Login />} />
+          <Route path="confirmar_cuenta/:token" element={<ConfirmarCuenta />} />
+          <Route path="confirmar_cuenta/:id" element={<ConfirmarCuenta />} />
         </Route>
         <Route path="/dashboard" element={<ProtectedRoutes />}>
           <Route index element={<Dashboard />} />

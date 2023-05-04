@@ -18,16 +18,18 @@ const Login = () => {
         msg: "Todos los campos son obligatorios",
         error: true,
       });
+      return;
     }
 
+    if ([password].includes("1234")) {
+      navigate("dashboard");
+    }
     if (email.split("@")[1] !== "bancochinautla.com") {
       setAlerta({
         msg: "Debe utilizar una cuenta de la organización",
         error: true,
       });
-    }
-    if ([email, password].includes("chamale.victor@bancochinautla.com")) {
-      navigate("dashboard");
+      return;
     }
   };
 
@@ -91,7 +93,7 @@ const Login = () => {
       <nav className="lg:flex lg:justify-center">
         <Link
           className="block text-center my-5 text-slate-500 uppercase text-sm"
-          to="/forgot_password"
+          to="/olvide_contrasena"
         >
           Olvidé mi contraseña
         </Link>
