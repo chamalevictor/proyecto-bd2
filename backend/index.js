@@ -13,11 +13,12 @@ import cors from "cors";
 try {
   await oracledb.createPool(db_config);
   const pool = await oracledb.getPool();
-  console.log(
-    `Se ha establecido la conexión '${pool.poolAlias}' a la base de datos.`
-  );
+  console.log(`Se ha establecido la conexión a la base de datos.`);
 } catch (error) {
-  console.log(error);
+  console.log(
+    "Error: No se ha podido establecer la conexion a la base de datos"
+  );
+  console.log("Verifique que la base de datos este corriendo");
 }
 
 // Levantando el servidor.
