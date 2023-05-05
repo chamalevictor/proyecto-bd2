@@ -14,7 +14,7 @@ const Dashboard = () => {
         <Titulo textoClaro={"Tablero"} textoOscuro={"Principal"} />
       </div>
       <div className="flex flex-wrap gap-5">
-        <Link to={"operaciones"}>
+        <Link to={"seleccion_cuenta"}>
           <Modules img={operaciones_jpg} moduleName="Operaciones" />
         </Link>
         <Link to={"servicio_al_cliente"}>

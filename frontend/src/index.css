@@ -12,3 +12,8 @@
   aspect-ratio: 3/2;
   object-fit: cover;
 }
+
+
+input:invalid {
+    border: 3px solid red;
+}
