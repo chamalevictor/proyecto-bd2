@@ -5,6 +5,12 @@
 ALTER SESSION SET NLS_DATE_FORMAT = 'YYYY-MM-DD';
 ALTER SESSION SET NLS_DATE_LANGUAGE = 'SPANISH';
 
+CREATE OR REPLACE TRIGGER CHANGE_DATE_FORMAT
+AFTER LOGON ON DATABASE
+CALL DBMS_SESSION.SET_NLS('NLS_DATE_FORMAT','"YYYY-MM-DD"');
+CALL DBMS_SESSION.SET_NLS('NLS_DATE_LANGUAGE','"SPANISH"');
+/
+
 -- Crear un usuario nuevo y asignar rol
 CREATE
 OR REPLACE PROCEDURE CREAR_USUARIO(
@@ -140,33 +146,113 @@ END;
 /
 
 
-commit;
-declare
-msg VARCHAR2(100);
-exito NUMBER;
-contrasena VARCHAR2(100);
-usuario_buscado usuario%ROWTYPE;
-
-begin
-    AUTENTICAR_USUARIO('victor.chamale@bancochinautla.com', contrasena, usuario_buscado, msg, exito);
-    DBMS_OUTPUT.PUT_LINE(usuario_buscado.correo);
-end;
-
-select * from usuario;
-update usuario set id_rol = 1 where id_usuario = 1;
-commit;
-
-
-
-CREATE OR REPLACE PROCEDURE PRUEBA(prueba_out OUT usuario%ROWTYPE)
+-- Crear Agencia
+CREATE OR REPLACE PROCEDURE CREAR_AGENCIA (nombre_agencia VARCHAR2, ubicacion_agencia VARCHAR2, telefono_agencia NUMBER, msg OUT VARCHAR2, exito OUT NUMBER)
 AS
 BEGIN
-    SELECT * INTO prueba_out FROM usuario WHERE id_usuario = 1;
+    SAVEPOINT inicio;
+    INSERT INTO agencia VALUES (agencia_seq.nextval, nombre_agencia, ubicacion_agencia, telefono_agencia);
+    commit;
+        msg := 'Agencia creada exitosamente';
+        exito := 1;
+
+
+EXCEPTION
+    WHEN OTHERS THEN
+    ROLLBACK TO inicio;
+        msg := 'Ocurrio un problema creando la agencia';
+        exito := 0;
+    RAISE;
 END;
 
+
+-- Ingresando las primeras 2 agencias
 declare
-    otra_prueba usuario%rowtype;
-begin
-    prueba(otra_prueba);
-    DBMS_OUTPUT.PUT_LINE(otra_prueba.nombre);
+    msg VARCHAR2(100);
+    exito NUMBER;
+    begin
+    CREAR_AGENCIA('Central', '4 Av. 5-64 Zona 1, Guatemala', 22550000, msg, exito);
+    CREAR_AGENCIA('Portales', 'Km. 5 Carretera al Atlantico CC. Portales', 24240000, msg, exito);
+    DBMS_OUTPUT.PUT_LINE(msg);
 end;
+
+
+
+-- Crear Caja
+CREATE OR REPLACE PROCEDURE CREAR_CAJA (id_agencia_caja NUMBER, msg OUT VARCHAR2, exito OUT NUMBER)
+AS
+    actual NUMBER;
+
+BEGIN
+    SAVEPOINT inicio_caja;
+    SELECT COUNT(*) INTO actual FROM caja WHERE id_agencia = id_agencia_caja;
+    INSERT INTO caja VALUES (caja_seq.nextval, actual+1, id_agencia_caja);
+    commit;
+    msg := 'Se ha creado la caja número: ' || TO_CHAR(actual+1);
+    exito := 1;
+
+EXCEPTION
+    WHEN OTHERS THEN
+    ROLLBACK TO inicio_caja;
+        msg := 'Ocurrio un problema creando la agencia';
+        exito := 0;
+    RAISE;
+END;
+
+
+
+
+
+CREATE OR REPLACE PROCEDURE CREAR_CLIENTE(
+id_cliente_nuevo NUMBER,
+nombre_cliente VARCHAR2,
+tipo_cliente VARCHAR2,
+correo_cliente VARCHAR2,
+fecha_nac_cliente VARCHAR2,
+msg OUT VARCHAR2,
+exito OUT NUMBER)
+AS
+    cliente_existe_exception EXCEPTION;
+    cliente_existe NUMBER;
+
+BEGIN
+    SAVEPOINT inicio;
+    SELECT COUNT(*) INTO cliente_existe FROM cliente WHERE no_identificacion = id_cliente_nuevo;
+
+    IF cliente_existe = 1 THEN
+        RAISE cliente_existe_exception;
+
+    ELSE
+
+        INSERT INTO cliente VALUES(1, nombre_cliente, tipo_cliente, correo_cliente, TO_DATE(fecha_nac_cliente, 'YYYY-MM-DD'), id_cliente_nuevo);
+        COMMIT;
+        msg := 'Cliente registrado exitosamente';
+        exito := 1;
+    END IF;
+
+EXCEPTION
+    WHEN cliente_existe_exception THEN
+        msg := 'El usuario ya se encuentra registrado';
+        exito:= 0;
+    WHEN OTHERS THEN
+    ROLLBACK TO inicio;
+    RAISE;
+
+    END;
+
+
+DECLARE
+    msg VARCHAR2(100);
+    exito NUMBER;
+    BEGIN
+    CREAR_CLIENTE(123, 'Victor Chamale', 1, 'chamale.victor@gmail.com', '1991-09-29', msg, exito);
+end;
+
+
+insert into cliente (id_cliente, nombre, id_tipo_cliente, correo, fecha_nac ) values (5, 'Victor Chamale', 1, 'chamale.victor@gmail.com', TO_DATE('29-SEP-91', 'YYYY-MM-DD') );
+
+
+insert into cliente values (123, 'Victor Chamale', 1, 'chamale.victor@gmail.com', TO_DATE('1991-10-10', 'YYY-MM-DD'),123);
+
+select * from cliente;
+
