@@ -7,16 +7,14 @@ import Alerta from "../componentes/Alerta";
 import logo from "../img/banco-chinautla-logo.png";
 
 const Login = () => {
-  const {
-    usuarios,
-    alerta: alertaRedux,
-    autenticado,
-  } = useSelector((state) => state.usuarios);
+  const { usuarios, alerta, autenticado } = useSelector(
+    (state) => state.usuarios
+  );
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [alerta, setAlerta] = useState({});
+  const [alerta2, setAlerta] = useState({});
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -32,7 +30,6 @@ const Login = () => {
     }
 
     if (email.split("@")[1] !== "bancochinautla.com") {
-      console.log("se mete");
       setAlerta({
         msg: "Debe utilizar una cuenta de la organizacion",
         error: true,
@@ -45,7 +42,7 @@ const Login = () => {
 
   useEffect(() => {
     if (autenticado) {
-      localStorage.setItem("token", usuarios.token);
+      localStorage.setItem("token", usuarios.usuario.token);
       navigate("/dashboard");
     }
     return () => {
@@ -56,14 +53,14 @@ const Login = () => {
     };
   }, [autenticado]);
 
-  const { msg } = alerta;
   useEffect(() => {
-    console.log(alertaRedux);
+    console.log(alerta);
     setAlerta({
-      alertaRedux,
+      alerta,
     });
-  }, [alertaRedux]);
+  }, [alerta]);
 
+  const { msg } = alerta;
   return (
     <>
       <div className="w-full flex justify-center bt-10 mb-6">
@@ -112,16 +109,17 @@ const Login = () => {
           className="bg-green-700 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer hover:bg-green-800 transition-colors"
         />
       </form>
-      <nav className="lg:flex lg:justify-center">
-        <Link
-          className="block text-center my-5 text-slate-500 uppercase text-sm"
-          to="/olvide_contrasena"
-        >
-          Olvidé mi contraseña
-        </Link>
-      </nav>
     </>
   );
 };
 
 export default Login;
+
+// <nav className="lg:flex lg:justify-center">
+// <Link
+//   className="block text-center my-5 text-slate-500 uppercase text-sm"
+//   to="/olvide_contrasena"
+// >
+//   Olvidé mi contraseña
+// </Link>
+// </nav>

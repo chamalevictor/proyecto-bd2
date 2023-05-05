@@ -53,40 +53,51 @@ const crearUsuario = async (req, res) => {
 
 // Authenticate user.
 const autenticarUsuario = async (req, res) => {
-  const { email: correo_usuario, password } = req.body;
+  const { email, password } = req.body;
 
   let connection;
   let contrasenaHasheada;
+  let consulta_exitosa;
+  let mensaje;
+  let usuario = {
+    id_usuario: 0,
+    nombre: "",
+    correo: email,
+    rol: 0,
+    token: "",
+  };
 
   try {
     connection = await oracledb.getConnection({ poolAlias: "default" }); // Obtener conexion del pool
     const result = await connection.execute(
       // Llamar el procedimiento almacenado que se encarga
-      //   `BEGIN AUTENTICAR_USUARIO(:correo_usuario, :contrasena, :usuario_consultado, :msg, :exito); END;`, // de registrar un nuevo usuario
-      //   {
-      //     correo_usuario,
-      //     contrasena: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
-      //     usuario_consultado: { dir: oracledb.BIND_OUT, type: oracledb.CURSOR },
-      //     msg: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
-      //     exito: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
-      //   }
-      // );
-      // contrasenaHasheada = result.outBinds.contrasena;
-
-      `BEGIN PRUEBA(:prueba_out); END;`,
+      `BEGIN AUTENTICAR_USUARIO(:email, :id_de_usuario, :contrasena, :nombre_usuario, :rol_usuario, :msg, :exito); END;`,
       {
-        prueba_out: {
-          type: ARRAY.OUTPUTPARAMETERTABLE,
-          dir: oracledb.BIND_OUT,
-        },
+        email,
+        id_de_usuario: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+        contrasena: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
+        nombre_usuario: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
+        rol_usuario: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
+        msg: { dir: oracledb.BIND_OUT, type: oracledb.STRING },
+        exito: { dir: oracledb.BIND_OUT, type: oracledb.NUMBER },
       }
     );
+    contrasenaHasheada = result.outBinds.contrasena;
+    usuario.id_usuario = result.outBinds.id_de_usuario;
+    usuario.nombre = result.outBinds.nombre_usuario;
+    usuario.correo = email;
+    usuario.rol = result.outBinds.rol_usuario;
+    consulta_exitosa = result.outBinds.exito;
+    mensaje = result.outBinds.msg;
+    //console.log(result.outBinds.nombre_usuario);
 
-    console.log(prueba_out.getRows());
-
-    // if (1 == 2) {
-    //   return;
-    // }
+    if ((result.outBinds.exito = 0)) {
+      res.json({
+        msg: result.outBinds.msg,
+        error: true,
+      });
+      return;
+    }
   } catch (err) {
     console.log(err);
   } finally {
@@ -99,19 +110,26 @@ const autenticarUsuario = async (req, res) => {
     }
   }
 
+  if (consulta_exitosa == 0) {
+    console.log("No se ha podido iniciar sesion");
+    res.json({
+      msg: mensaje,
+      error: true,
+    });
+    return;
+  }
+
   //Check user's password
   const authenticatePassword = async (password) => {
     return await bcrypt.compare(password, contrasenaHasheada); // Compares password sent vs password in db.
   };
 
   if (await authenticatePassword(password)) {
-    // res.json({
-    //   id_end_user: existingUser.rows[0].id_end_user,
-    //   name: existingUser.rows[0].name,
-    //   lastname: existingUser.rows[0].lastname,
-    //   email: existingUser.rows[0].email,
-    //   token: generateJWT(existingUser.rows[0].id_end_user),
-    // });
+    usuario.token = generarJWT(usuario.id_usuario);
+    res.json({
+      usuario,
+      exito: 1,
+    });
     console.log("si se hizo la desencripcion con exito");
   } else {
     const error = new Error("La contraseña ingresada es incorrecta");

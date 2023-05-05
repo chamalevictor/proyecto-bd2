@@ -88,7 +88,14 @@ END;
 
 
 -- Autenticar Usuario
-CREATE OR REPLACE PROCEDURE AUTENTICAR_USUARIO(correo_usuario VARCHAR2, contrasena OUT VARCHAR2, usuario_consultado OUT usuario%ROWTYPE, msg OUT VARCHAR2, exito OUT NUMBER)
+CREATE OR REPLACE PROCEDURE AUTENTICAR_USUARIO(
+correo_usuario VARCHAR2,
+id_de_usuario OUT NUMBER,
+contrasena OUT VARCHAR2,
+nombre_usuario OUT VARCHAR2,
+rol_usuario OUT NUMBER,
+msg OUT VARCHAR2,
+exito OUT NUMBER)
 AS
     usuario_no_existe EXCEPTION;
     usuario_no_activo EXCEPTION;
@@ -109,8 +116,10 @@ ELSIF
 
 -- Si existe existe, devuelve el password
 ELSE
+        id_de_usuario := usuario_record.id_usuario;
         contrasena := usuario_record.contrasena;
-        usuario_consultado := usuario_record;
+        nombre_usuario := usuario_record.nombre;
+        rol_usuario := usuario_record.id_rol;
         msg := 'Se ha autenticado con exito';
         exito := 1;
 END IF;
@@ -130,6 +139,8 @@ WHEN OTHERS THEN
 END;
 /
 
+
+commit;
 declare
 msg VARCHAR2(100);
 exito NUMBER;

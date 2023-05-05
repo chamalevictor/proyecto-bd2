@@ -11,8 +11,7 @@ export const loginUser = createAsyncThunk(
       if (data.exito == 1) {
         thunkApi.dispatch(usuarioActions.setLoggedUser(data));
       } else {
-        console.log("tons que con la exception");
-        console.log(data.msg);
+        console.log(data);
         thunkApi.dispatch(
           usuarioActions.setAlertMessage({
             msg: data.msg,
