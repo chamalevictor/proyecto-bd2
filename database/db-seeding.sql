@@ -124,3 +124,33 @@ CREATE SEQUENCE usuario_seq
     MAXVALUE 2000
     NOCYCLE
     CACHE 2;
+
+-- Secuencia ids de agencias
+CREATE SEQUENCE agencia_seq
+    INCREMENT BY 1
+    START WITH 1
+    MINVALUE 1
+    MAXVALUE 100
+    NOCYCLE
+    CACHE 2;
+
+-- Secuencia ids de cajas
+CREATE SEQUENCE caja_seq
+    INCREMENT BY 1
+    START WITH 1
+    MINVALUE 1
+    MAXVALUE 500
+    NOCYCLE
+    CACHE 2;
+
+
+-- Secuencia ids de cajas
+CREATE SEQUENCE caja_seq
+    INCREMENT BY 1
+    START WITH 1
+    MINVALUE 1
+    MAXVALUE 500
+    NOCYCLE
+    CACHE 2;
+
+
