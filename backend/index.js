@@ -10,6 +10,7 @@ import reportesRoutes from "./routes/reportesRoutes.js";
 import cors from "cors";
 
 // Estableciendo conexion a la base de datos.
+oracledb.outFormat = oracledb.OUT_FORMAT_OBJECT;
 try {
   await oracledb.createPool(db_config);
   const pool = await oracledb.getPool();

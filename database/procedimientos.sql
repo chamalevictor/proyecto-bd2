@@ -224,7 +224,7 @@ BEGIN
 
     ELSE
 
-        INSERT INTO cliente VALUES(1, nombre_cliente, tipo_cliente, correo_cliente, TO_DATE(fecha_nac_cliente, 'YYYY-MM-DD'), id_cliente_nuevo);
+        INSERT INTO cliente VALUES(cliente_seq.nextval, nombre_cliente, tipo_cliente, correo_cliente, TO_DATE(fecha_nac_cliente, 'YYYY-MM-DD'), id_cliente_nuevo);
         COMMIT;
         msg := 'Cliente registrado exitosamente';
         exito := 1;
@@ -241,18 +241,102 @@ EXCEPTION
     END;
 
 
-DECLARE
+-- Crear una cuenta para clientes
+CREATE OR REPLACE PROCEDURE CREAR_CUENTA(
+cliente NUMBER,
+tipo_cuenta NUMBER,
+agencia NUMBER,
+firma1_cuenta VARCHAR2,
+firma2_cuenta VARCHAR2,
+firma3_cuenta VARCHAR2,
+msg OUT VARCHAR2,
+exito OUT NUMBER)
+AS
+
+    cliente_no_existe EXCEPTION;
+    cliente_existente NUMBER;
+    random NUMBER := ROUND(dbms_random.value(0,9));
+
+BEGIN
+
+    SAVEPOINT inicio_crear_cuenta;
+
+    SELECT COUNT(*) INTO cliente_existente FROM cliente WHERE id_cliente = cliente;
+
+    IF cliente_existente = 0 THEN
+        RAISE cliente_no_existe;
+    ELSE
+        INSERT INTO cuenta
+        VALUES (
+                tipo_cuenta,
+                agencia,
+                ((SELECT COUNT(*) FROM cuenta WHERE id_tipo_cuenta = tipo_cuenta AND id_agencia = agencia)+1),
+                random,
+                cliente,
+                SYSDATE,
+                0,
+                firma1_cuenta,
+                firma2_cuenta,
+                firma3_cuenta);
+        commit;
+        msg := 'La cuenta se ha creado exitosamente';
+        exito:= 1;
+    END IF;
+
+    EXCEPTION
+    WHEN cliente_no_existe THEN
+        msg := 'No se encuentran registros del cliente';
+        exito:= 0;
+    WHEN OTHERS THEN
+    ROLLBACK TO inicio_crear_cuenta;
+    RAISE;
+END;
+
+
+
+
+
+
+
+
+-- template de pruebas
+declare
     msg VARCHAR2(100);
     exito NUMBER;
-    BEGIN
-    CREAR_CLIENTE(123, 'Victor Chamale', 1, 'chamale.victor@gmail.com', '1991-09-29', msg, exito);
-end;
+    begin
+        CREAR_CUENTA(
+            4,
+            1,
+            2,
+            'Firma 1',
+            'Firma 2',
+            'Firma 3',
+            msg,
+            exito
+            );
+        DBMS_OUTPUT.PUT_LINE(msg);
+    end;
 
 
-insert into cliente (id_cliente, nombre, id_tipo_cliente, correo, fecha_nac ) values (5, 'Victor Chamale', 1, 'chamale.victor@gmail.com', TO_DATE('29-SEP-91', 'YYYY-MM-DD') );
 
 
-insert into cliente values (123, 'Victor Chamale', 1, 'chamale.victor@gmail.com', TO_DATE('1991-10-10', 'YYY-MM-DD'),123);
 
-select * from cliente;
 
+
+declare
+    msg VARCHAR2(100);
+    exito NUMBER;
+    begin
+
+    end;
+
+select * from cuenta;
+
+commit;    -- Template
+CREATE OR REPLACE PROCEDURE (msg OUT, exito OUT NUMBER)
+AS
+BEGIN
+END;
+
+
+    select * from cuenta;

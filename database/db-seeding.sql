@@ -144,12 +144,14 @@ CREATE SEQUENCE caja_seq
     CACHE 2;
 
 
--- Secuencia ids de cajas
-CREATE SEQUENCE caja_seq
+-- TODO: Agregar las nuevas secuencias
+
+-- Secuencia ids de clientes
+CREATE SEQUENCE cliente_seq
     INCREMENT BY 1
     START WITH 1
     MINVALUE 1
-    MAXVALUE 500
+    MAXVALUE 1000
     NOCYCLE
     CACHE 2;
 

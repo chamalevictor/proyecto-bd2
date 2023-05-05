@@ -5,6 +5,7 @@ import {
   autenticarUsuario,
   obtenerRoles,
 } from "../controllers/usuariosController.js";
+// import checkAuth from "../middlewares/checkAuth.js";
 
 const router = express.Router();
 
@@ -12,5 +13,6 @@ const router = express.Router();
 router.post("/", crearUsuario);
 router.post("/login", autenticarUsuario);
 router.post("/confirmar_cuenta/:token", confirmarCuenta);
+router.get("/obtener_roles", obtenerRoles);
 
 export default router;

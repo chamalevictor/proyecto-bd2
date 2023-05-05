@@ -1,9 +1,8 @@
 import express from "express";
+import { crearCliente } from "../controllers/servicioAlClienteController.js";
 
 const router = express.Router();
 
-router.get("/", (req, res) => {
-  res.send("desde /api/servicio_al_cliente");
-});
+router.post("/crear_cliente", crearCliente);
 
 export default router;
