@@ -1,26 +1,26 @@
-import agencias_jpg from "../img/agencias.jpg";
+import servicioAlCliente_jpg from "../img/servicio-al-cliente.jpg";
 import Titulo from "../componentes/Titulo";
 import TarjetaOpciones from "../componentes/TarjetaOpciones";
 import { Link } from "react-router-dom";
 import BotonVolver from "../componentes/BotonVolver";
 
-const Agencias = () => {
+const ServicioAlCliente = () => {
   window.scrollTo({ top: 100, left: 0 });
   return (
     <div className="">
       <div className="">
-        <Titulo textoClaro={"Administración de"} textoOscuro={"Agencias"} />
+        <Titulo textoClaro={"Servicio al"} textoOscuro={"Cliente"} />
       </div>
       <div className="w-full flex  justify-between flex-wrap gap-3">
-        <Link to={"crear_agencia"}>
-          <TarjetaOpciones texto={"Crear Agencia"} />
+        <Link to={"reportes_de_cuentas"}>
+          <TarjetaOpciones texto={"Clientes"} />
         </Link>
-        <TarjetaOpciones texto={"Modificar Agencia"} />
-        <TarjetaOpciones texto={"Desactivar Agencia"} />
+        <TarjetaOpciones texto={"Cuentas"} />
+        <TarjetaOpciones texto={"Chequeras"} />
       </div>
       <div className="flex justify-center py-6 shadow-lg ">
         <img
-          src={agencias_jpg}
+          src={servicioAlCliente_jpg}
           alt=""
           className="max-w-sm rounded-lg shadow-lg"
         />
@@ -32,4 +32,4 @@ const Agencias = () => {
   );
 };
 
-export default Agencias;
+export default ServicioAlCliente;

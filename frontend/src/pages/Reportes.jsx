@@ -2,8 +2,10 @@ import reportes_jpg from "../img/reportes.jpg";
 import Titulo from "../componentes/Titulo";
 import TarjetaOpciones from "../componentes/TarjetaOpciones";
 import { Link } from "react-router-dom";
+import BotonVolver from "../componentes/BotonVolver";
 
 const Reportes = () => {
+  window.scrollTo({ top: 100, left: 0 });
   return (
     <div className="">
       <div className="">
@@ -22,6 +24,9 @@ const Reportes = () => {
           alt=""
           className="max-w-sm rounded-lg shadow-lg"
         />
+      </div>
+      <div className="flex justify-center py-6 shadow-lg scroll-smooth">
+        <BotonVolver ruta={"/dashboard"} />
       </div>
     </div>
   );

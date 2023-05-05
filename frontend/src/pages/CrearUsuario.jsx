@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Alerta from "../componentes/Alerta";
 import axiosClient from "../configs/axiosClient";
+import BotonVolver from "../componentes/BotonVolver";
 
 const CrearUsuario = () => {
   const [nombreCompleto, setNombreCompleto] = useState("");
@@ -88,7 +89,7 @@ const CrearUsuario = () => {
 
         <form
           onSubmit={handleSubmit}
-          className="my-10 bg-white rounded-lg shadow-lg px-10 pt-10 pb-3"
+          className="mt-7 mb-5 bg-white rounded-lg shadow-lg px-10 pt-10 pb-3"
         >
           <div className="my-5">
             <label
@@ -164,6 +165,9 @@ const CrearUsuario = () => {
             className="bg-green-700 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer hover:bg-green-800 transition-colors"
           />
         </form>
+        <div className="flex justify-center shadow-lg scroll-smooth">
+          <BotonVolver ruta={"/dashboard"} />
+        </div>
       </div>
     </div>
   );

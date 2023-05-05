@@ -1,10 +1,11 @@
 import usuarios_jpg from "../img/usuarios.jpg";
 import Titulo from "../componentes/Titulo";
 import TarjetaOpciones from "../componentes/TarjetaOpciones";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import BotonVolver from "../componentes/BotonVolver";
 
 const Usuarios = () => {
+  window.scrollTo({ top: 80, left: 0 });
   return (
     <div className="">
       <div className="">
@@ -24,7 +25,7 @@ const Usuarios = () => {
           className="max-w-sm rounded-lg shadow-lg"
         />
       </div>
-      <div className="flex justify-center py-6 shadow-lg focusable">
+      <div className="flex justify-center py-6 shadow-lg scroll-smooth">
         <BotonVolver ruta={"/dashboard"} />
       </div>
     </div>

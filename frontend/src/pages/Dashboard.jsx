@@ -14,14 +14,8 @@ const Dashboard = () => {
         <Titulo textoClaro={"Tablero"} textoOscuro={"Principal"} />
       </div>
       <div className="flex flex-wrap gap-5">
-        <Link to={"usuarios"}>
-          <Modules img={usuarios_jpg} moduleName="Usuarios" />
-        </Link>
-        <Link to={"agencias"}>
-          <Modules img={agencias_jpg} moduleName="Agencias" />
-        </Link>
-        <Link to={"reportes"}>
-          <Modules img={reportes_jpg} moduleName="Reportes" />
+        <Link to={"operaciones"}>
+          <Modules img={operaciones_jpg} moduleName="Operaciones" />
         </Link>
         <Link to={"servicio_al_cliente"}>
           <Modules
@@ -29,8 +23,15 @@ const Dashboard = () => {
             moduleName="Servicio Al Cliente"
           />
         </Link>
-        <Link to={"operaciones"}>
-          <Modules img={operaciones_jpg} moduleName="Operaciones" />
+        <Link to={"reportes"}>
+          <Modules img={reportes_jpg} moduleName="Reportes" />
+        </Link>
+
+        <Link to={"usuarios"}>
+          <Modules img={usuarios_jpg} moduleName="Usuarios" />
+        </Link>
+        <Link to={"agencias"}>
+          <Modules img={agencias_jpg} moduleName="Agencias" />
         </Link>
       </div>
     </div>
