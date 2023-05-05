@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Outlet } from "react-router-dom";
 import AuthLayout from "./layouts/AuthLayout";
 import Login from "./pages/Login";
 import ConfirmarCuenta from "./pages/ConfirmarCuenta";
@@ -10,6 +10,10 @@ import Agencias from "./pages/Agencias";
 import Reportes from "./pages/Reportes";
 import ServicioAlCliente from "./pages/ServicioAlCliente";
 import Operaciones from "./pages/Operaciones";
+import SeleccionarAgencia from "./pages/SeleccionarAgencia";
+import Retiros from "./pages/subpages/Retiros";
+import Depositos from "./pages/subpages/Depositos";
+
 
 function App() {
   return (
@@ -28,7 +32,14 @@ function App() {
           <Route path="agencias" element={<Agencias />} />
           <Route path="reportes" element={<Reportes />} />
           <Route path="servicio_al_cliente" element={<ServicioAlCliente />} />
-          <Route path="operaciones" element={<Operaciones />} />
+          <Route path="seleccion_cuenta" element={<SeleccionarAgencia />}/>
+          <Route path="operaciones/*" element={<Outlet />} >
+            <Route index element={<Operaciones />} />
+            <Route path="retiros" element={<Retiros />} />
+            <Route path="depositos" element={<Depositos />} />
+          </Route>
+            
+          {/*<Route path="operaciones" element={<Operaciones />} />*/}
         </Route>
       </Routes>
     </BrowserRouter>
