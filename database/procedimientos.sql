@@ -317,6 +317,10 @@ declare
         DBMS_OUTPUT.PUT_LINE(msg);
     end;
 
+CREATE OR REPLACE PROCEDURE CREAR_DOCUMENTO(msg OU , exito OUT NUMBER)
+AS
+BEGIN
+END;
 
 
 
@@ -332,11 +336,8 @@ declare
 
 select * from cuenta;
 
-commit;    -- Template
+-- Template
 CREATE OR REPLACE PROCEDURE (msg OUT, exito OUT NUMBER)
 AS
 BEGIN
 END;
-
-
-    select * from cuenta;
