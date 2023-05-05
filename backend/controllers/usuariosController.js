@@ -255,6 +255,25 @@ const profile = async (req, res) => {
   res.json(user.rows[0]);
 };
 
+const obtenerRoles = async (req, res) => {
+  let connection;
+  try {
+    connection = await oracledb.getConnection({ poolAlias: "default" }); // Obtener conexion del pool
+    const result = await connection.execute(`SELECT * FROM rol; END;`);
+    console.log(result.rows());
+    res.json(result);
+  } catch (err) {
+    console.log(err);
+  } finally {
+    if (connection) {
+      try {
+        await connection.close();
+      } catch (err) {
+        console.error(err);
+      }
+    }
+  }
+};
 export {
   crearUsuario,
   autenticarUsuario,
@@ -263,4 +282,5 @@ export {
   validateToken,
   newPassword,
   profile,
+  obtenerRoles,
 };

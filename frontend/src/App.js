@@ -8,6 +8,8 @@ import ProtectedRoutes from "./layouts/ProtectedRoutes";
 import CrearUsuario from "./pages/CrearUsuario";
 import Agencias from "./pages/Agencias";
 import Reportes from "./pages/Reportes";
+import ServicioAlCliente from "./pages/ServicioAlCliente";
+import Operaciones from "./pages/Operaciones";
 
 function App() {
   return (
@@ -25,6 +27,8 @@ function App() {
           <Route path="usuarios/crear_usuario" element={<CrearUsuario />} />
           <Route path="agencias" element={<Agencias />} />
           <Route path="reportes" element={<Reportes />} />
+          <Route path="servicio_al_cliente" element={<ServicioAlCliente />} />
+          <Route path="operaciones" element={<Operaciones />} />
         </Route>
       </Routes>
     </BrowserRouter>
