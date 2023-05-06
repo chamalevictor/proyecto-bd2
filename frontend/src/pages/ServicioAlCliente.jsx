@@ -12,7 +12,7 @@ const ServicioAlCliente = () => {
         <Titulo textoClaro={"Servicio al"} textoOscuro={"Cliente"} />
       </div>
       <div className="w-full flex  justify-between flex-wrap gap-3">
-        <Link to={"reportes_de_cuentas"}>
+        <Link to={"opciones"}>
           <TarjetaOpciones texto={"Clientes"} />
         </Link>
         <TarjetaOpciones texto={"Cuentas"} />
