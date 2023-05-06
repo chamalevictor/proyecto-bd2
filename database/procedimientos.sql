@@ -166,18 +166,6 @@ EXCEPTION
 END;
 
 
--- Ingresando las primeras 2 agencias
-declare
-    msg VARCHAR2(100);
-    exito NUMBER;
-    begin
-    CREAR_AGENCIA('Central', '4 Av. 5-64 Zona 1, Guatemala', 22550000, msg, exito);
-    CREAR_AGENCIA('Portales', 'Km. 5 Carretera al Atlantico CC. Portales', 24240000, msg, exito);
-    DBMS_OUTPUT.PUT_LINE(msg);
-end;
-
-
-
 -- Crear Caja
 CREATE OR REPLACE PROCEDURE CREAR_CAJA (id_agencia_caja NUMBER, msg OUT VARCHAR2, exito OUT NUMBER)
 AS
@@ -200,9 +188,7 @@ EXCEPTION
 END;
 
 
-
-
-
+-- Creando Clientes
 CREATE OR REPLACE PROCEDURE CREAR_CLIENTE(
 id_cliente_nuevo NUMBER,
 nombre_cliente VARCHAR2,
@@ -293,12 +279,6 @@ BEGIN
 END;
 
 
-
-
-
-
-
-
 -- template de pruebas
 declare
     msg VARCHAR2(100);
@@ -325,10 +305,6 @@ AS
 BEGIN
 END;
 
-    select * from caja;
-
-
-
 
 
 declare
@@ -341,7 +317,10 @@ declare
 select * from cuenta;
 
 -- Template
-CREATE OR REPLACE PROCEDURE (msg OUT, exito OUT NUMBER)
+CREATE OR REPLACE PROCEDURE (msg OUT VARCHAR2, exito OUT NUMBER)
 AS
 BEGIN
 END;
+
+
+    Select * from cuenta;

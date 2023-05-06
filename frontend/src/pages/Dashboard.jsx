@@ -7,6 +7,7 @@ import agencias_jpg from "../img/agencias.jpg";
 import reportes_jpg from "../img/reportes.jpg";
 import Titulo from "../componentes/Titulo";
 import { Link } from "react-router-dom";
+import Loading from "../componentes/Loading";
 
 const Dashboard = () => {
   const { usuario } = useSelector((state) => state.usuarios.usuarios);
@@ -24,7 +25,7 @@ const Dashboard = () => {
         )}
 
         {(usuario.rol === 3 || usuario.rol === 4) && (
-          <Link to={"servicio_al_cliente"}>
+          <Link to={"seleccion_escritorio"}>
             <Modules
               img={servicioAlCliente_jpg}
               moduleName="Servicio Al Cliente"

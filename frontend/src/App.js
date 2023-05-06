@@ -15,6 +15,10 @@ import Retiros from "./pages/subpages/Retiros";
 import Depositos from "./pages/subpages/Depositos";
 import OpcionesCliente from "./pages/subpages/OpcionesCliente";
 import CrearCliente from "./pages/subpages/CrearCliente";
+import CrearAgencia from "./pages/CrearAgencia";
+import AgregarCaja from "./pages/AgregarCaja";
+import Cuentas from "./pages/Cuentas";
+import SeleccionEscritorio from "./pages/SeleccionEscritorio";
 
 function App() {
   return (
@@ -31,17 +35,24 @@ function App() {
           <Route path="usuarios" element={<Usuarios />} />
           <Route path="usuarios/crear_usuario" element={<CrearUsuario />} />
           <Route path="agencias" element={<Agencias />} />
+          <Route path="agencias/crear_agencia" element={<CrearAgencia />} />
+          <Route path="agencias/agregar_caja" element={<AgregarCaja />} />
           <Route path="reportes" element={<Reportes />} />
+          <Route
+            path="seleccion_escritorio"
+            element={<SeleccionEscritorio />}
+          />
 
-          <Route path="servicio_al_cliente/*" element={<Outlet/>} >
+          <Route path="servicio_al_cliente/*" element={<Outlet />}>
             <Route index element={<ServicioAlCliente />} />
-            <Route path="opciones/*" element={<Outlet />} >
+            <Route path="cuentas" element={<Cuentas />} />
+            <Route path="opciones/*" element={<Outlet />}>
               <Route index element={<OpcionesCliente />} />
               <Route path="crear" element={<CrearCliente />} />
             </Route>
           </Route>
-          <Route path="seleccion_cuenta" element={<SeleccionarAgencia />}/>
-          <Route path="operaciones/*" element={<Outlet />} >
+          <Route path="seleccion_agencia" element={<SeleccionarAgencia />} />
+          <Route path="operaciones/*" element={<Outlet />}>
             <Route index element={<Operaciones />} />
             <Route path="retiros" element={<Retiros />} />
             <Route path="depositos" element={<Depositos />} />

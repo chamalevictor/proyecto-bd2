@@ -130,7 +130,6 @@ const autenticarUsuario = async (req, res) => {
       usuario,
       exito: 1,
     });
-    console.log("si se hizo la desencripcion con exito");
   } else {
     const error = new Error("La contraseña ingresada es incorrecta");
     return res.status(403).json({ msg: error.message });

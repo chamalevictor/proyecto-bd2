@@ -15,7 +15,9 @@ const ServicioAlCliente = () => {
         <Link to={"opciones"}>
           <TarjetaOpciones texto={"Clientes"} />
         </Link>
-        <TarjetaOpciones texto={"Cuentas"} />
+        <Link to={"cuentas"}>
+          <TarjetaOpciones texto={"Cuentas"} />
+        </Link>
         <TarjetaOpciones texto={"Chequeras"} />
       </div>
       <div className="flex justify-center py-6 shadow-lg ">
@@ -25,7 +27,7 @@ const ServicioAlCliente = () => {
           className="max-w-sm rounded-lg shadow-lg"
         />
       </div>
-      <div className="flex justify-center py-6 shadow-lg scroll-smooth">
+      <div className="flex justify-center py-6 scroll-smooth">
         <BotonVolver ruta={"/dashboard"} />
       </div>
     </div>

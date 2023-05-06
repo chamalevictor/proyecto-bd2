@@ -1,4 +1,4 @@
-### Contenedor Oracle 19c
+### Compilar imagen Contenedor Oracle 19c
 
 [Enlace a documentacion oficial](https://github.com/oracle/docker-images/tree/main/OracleDatabase/SingleInstance)
 
@@ -20,4 +20,16 @@ Parameters:
    -o: passes on container build option
 
 * select one edition only: -e, -s, or -x
+```
+
+## Comando para levantar el contenedor descargando la imagen direcata.
+
+```
+docker run --name oracle-21 \
+-p 1521:1521 -p 5500:5500 \
+-e ORACLE_SID=XE \
+-e ORACLE_PWD=pass4oracle \
+-v /home/vchamale/Documents/projects/oracle/oracle-database/oradata:/opt/oracle/oradata \
+-v /home/vchamale/Documents/projects/oracle/oracle-database/scripts/startup:/opt/oracle/scripts/startup \
+container-registry.oracle.com/database/express:21.3.0-xe
 ```

@@ -1,15 +1,13 @@
 import { Outlet, Navigate } from "react-router-dom";
-//import useAuth from '../hooks/useAuth'
+import { useSelector } from "react-redux";
 import Header from "../componentes/Header";
 
 const ProtectedRoutes = () => {
-  //const { auth, loading } = useAuth()
-
-  //if (loading) return 'Cargando...'
+  const { autenticado } = useSelector((state) => state.usuarios);
 
   return (
     <>
-      {true ? (
+      {autenticado ? (
         <div className="bg-gray-100">
           <Header />
           <main className="px-6">
