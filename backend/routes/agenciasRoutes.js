@@ -7,6 +7,6 @@ import {
 const router = express.Router();
 
 router.get("/obtener_agencias", obtenerAgencias);
-router.get("/obtener_cajas", obtenerCajas);
+router.get("/obtener_cajas/:id_agencia", obtenerCajas);
 
 export default router;

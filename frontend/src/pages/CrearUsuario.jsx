@@ -1,15 +1,30 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { usuarioActions } from "../features/usuariosSlice";
 import Alerta from "../componentes/Alerta";
 import axiosClient from "../configs/axiosClient";
 import BotonVolver from "../componentes/BotonVolver";
 
 const CrearUsuario = () => {
+  const dispatch = useDispatch();
+  const { roles } = useSelector((state) => state.usuarios);
   const [nombreCompleto, setNombreCompleto] = useState("");
   const [correo, setCorreo] = useState("");
   const [fecha_nac, setfecha_nac] = useState(new Date());
   const [id_rol, setid_rol] = useState(0);
   const [alerta, setAlerta] = useState({});
+  const [cargando, setCargando] = useState(false);
+
+  const getRoles = async () => {
+    const { data } = await axiosClient.get(`/usuarios/obtener_roles`);
+    dispatch(usuarioActions.setRoles(data));
+    setCargando(false);
+  };
+
+  useEffect(() => {
+    setCargando(true);
+    getRoles();
+  }, []);
 
   useEffect(() => {
     setAlerta({
@@ -17,6 +32,16 @@ const CrearUsuario = () => {
       error: false,
     });
   }, [nombreCompleto, correo, fecha_nac, id_rol]);
+
+  const listaRoles =
+    roles.length > 0 &&
+    roles.map((item) => {
+      return (
+        <option key={item.ID_ROL} value={item.ID_ROL}>
+          {item.DESCRIPCION}
+        </option>
+      );
+    });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -155,8 +180,7 @@ const CrearUsuario = () => {
               <option value="DEFAULT" disabled>
                 -- Seleccione un Rol --
               </option>
-              <option value="1">Administrador de Sistema</option>
-              <option value="2">Gerente de Agencia</option>
+              {listaRoles}
             </select>
           </div>
           <input

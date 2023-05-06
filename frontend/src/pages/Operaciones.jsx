@@ -3,7 +3,7 @@ import Titulo from "../componentes/Titulo";
 import TarjetaOpciones from "../componentes/TarjetaOpciones";
 import { Link } from "react-router-dom";
 import BotonVolver from "../componentes/BotonVolver";
-import { Outlet, Route, Routes } from "react-router-dom"
+import { Outlet, Route, Routes } from "react-router-dom";
 import Retiros from "./subpages/Retiros";
 
 const Operaciones = () => {
@@ -31,9 +31,9 @@ const Operaciones = () => {
         />
       </div>
       <div className="flex justify-center py-6 shadow-lg scroll-smooth">
-        <BotonVolver ruta={"/dashboard/seleccion_agencia"} />
+        <BotonVolver ruta={"/dashboard"} />
       </div>
-      <Routes >
+      <Routes>
         <Route path="retiros" element={<Retiros />} />
       </Routes>
     </div>

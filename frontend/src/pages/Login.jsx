@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { loginUser } from "../features/usuariosServices";
 import { useSelector, useDispatch } from "react-redux";
-import { usuarioActions } from "../features/usuariosSlice";
 import Alerta from "../componentes/Alerta";
 import logo from "../img/banco-chinautla-logo.png";
 
@@ -41,8 +40,8 @@ const Login = () => {
   };
 
   useEffect(() => {
-    if (true) {
-      localStorage.setItem("token", 'si');
+    if (autenticado) {
+      localStorage.setItem("token", usuarios.usuario.token);
       navigate("/dashboard");
     }
     return () => {
@@ -54,7 +53,6 @@ const Login = () => {
   }, [autenticado]);
 
   useEffect(() => {
-    console.log(alerta);
     setAlerta({
       alerta,
     });

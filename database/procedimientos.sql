@@ -317,11 +317,15 @@ declare
         DBMS_OUTPUT.PUT_LINE(msg);
     end;
 
+SELECT * FROM CLIENTE;
+
+
 CREATE OR REPLACE PROCEDURE CREAR_DOCUMENTO(msg OU , exito OUT NUMBER)
 AS
 BEGIN
 END;
 
+    select * from caja;
 
 
 

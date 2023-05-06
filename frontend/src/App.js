@@ -14,7 +14,6 @@ import SeleccionarAgencia from "./pages/SeleccionarAgencia";
 import Retiros from "./pages/subpages/Retiros";
 import Depositos from "./pages/subpages/Depositos";
 
-
 function App() {
   return (
     <BrowserRouter>
@@ -32,13 +31,13 @@ function App() {
           <Route path="agencias" element={<Agencias />} />
           <Route path="reportes" element={<Reportes />} />
           <Route path="servicio_al_cliente" element={<ServicioAlCliente />} />
-          <Route path="seleccion_cuenta" element={<SeleccionarAgencia />}/>
-          <Route path="operaciones/*" element={<Outlet />} >
+          <Route path="seleccion_agencia" element={<SeleccionarAgencia />} />
+          <Route path="operaciones/*" element={<Outlet />}>
             <Route index element={<Operaciones />} />
             <Route path="retiros" element={<Retiros />} />
             <Route path="depositos" element={<Depositos />} />
           </Route>
-            
+
           {/*<Route path="operaciones" element={<Operaciones />} />*/}
         </Route>
       </Routes>

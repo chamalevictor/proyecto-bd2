@@ -13,7 +13,6 @@
   object-fit: cover;
 }
 
-
-input:invalid {
+/* input:invalid {
     border: 3px solid red;
-}
+} */
