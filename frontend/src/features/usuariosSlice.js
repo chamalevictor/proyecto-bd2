@@ -1,9 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  usuarios: { usuario: { nombre: 'james' }},
+  usuarios: {},
   autenticado: false,
   alerta: { msg: "", error: false },
+  roles: [],
+  agencias: [],
+  cajas: [],
 };
 
 export const usuariosSlice = createSlice({
@@ -22,6 +25,15 @@ export const usuariosSlice = createSlice({
       state.usuarios = {};
       state.autenticado = false;
       state.alerta = { msg: "", error: false };
+    },
+    setRoles(state, action) {
+      state.roles = action.payload;
+    },
+    setAgencias(state, action) {
+      state.agencias = action.payload;
+    },
+    setCajas(state, action) {
+      state.cajas = action.payload;
     },
   },
 });

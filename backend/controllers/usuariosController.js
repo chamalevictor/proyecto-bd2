@@ -259,7 +259,9 @@ const obtenerRoles = async (req, res) => {
   let connection;
   try {
     connection = await oracledb.getConnection({ poolAlias: "default" }); // Obtener conexion del pool
-    const result = await connection.execute(`SELECT * FROM rol`);
+    const result = await connection.execute(
+      `SELECT * FROM rol ORDER BY id_rol ASC`
+    );
     res.json(result.rows);
   } catch (err) {
     console.log(err);

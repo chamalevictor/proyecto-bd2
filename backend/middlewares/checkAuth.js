@@ -11,7 +11,7 @@ const checkAuth = async (req, res, next) => {
     try {
       token = req.headers.authorization.split(" ")[1];
       const decoded = jwt.verify(token, process.env.JWT_SECRET);
-      console.log("este es el decoded id");
+      console.log("este es el decoded id", decoded.id);
       req.user = await oracledb.getConnection({ poolAlias: "default" });
       console.log("entramos aca");
       const result = await connection.execute(
