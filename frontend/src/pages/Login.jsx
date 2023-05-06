@@ -112,12 +112,3 @@ const Login = () => {
 };
 
 export default Login;
-
-// <nav className="lg:flex lg:justify-center">
-// <Link
-//   className="block text-center my-5 text-slate-500 uppercase text-sm"
-//   to="/olvide_contrasena"
-// >
-//   Olvidé mi contraseña
-// </Link>
-// </nav>

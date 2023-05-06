@@ -15,6 +15,9 @@ const Agencias = () => {
         <Link to={"crear_agencia"}>
           <TarjetaOpciones texto={"Crear Agencia"} />
         </Link>
+        <Link to={"agregar_caja"}>
+          <TarjetaOpciones texto={"Agregar Caja"} />
+        </Link>
         <TarjetaOpciones texto={"Modificar Agencia"} />
         <TarjetaOpciones texto={"Desactivar Agencia"} />
       </div>
@@ -25,7 +28,7 @@ const Agencias = () => {
           className="max-w-sm rounded-lg shadow-lg"
         />
       </div>
-      <div className="flex justify-center py-6 shadow-lg scroll-smooth">
+      <div className="flex justify-center py-6  scroll-smooth">
         <BotonVolver ruta={"/dashboard"} />
       </div>
     </div>

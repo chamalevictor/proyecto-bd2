@@ -33,7 +33,6 @@ const SeleccionarAgencia = () => {
   }, []);
 
   useEffect(() => {
-    console.log("se ha cambiado el id agencia a: ", id_agencia);
     getCajas();
   }, [id_agencia]);
 

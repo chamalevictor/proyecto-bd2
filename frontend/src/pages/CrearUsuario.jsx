@@ -189,7 +189,7 @@ const CrearUsuario = () => {
             className="bg-green-700 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer hover:bg-green-800 transition-colors"
           />
         </form>
-        <div className="flex justify-center shadow-lg scroll-smooth">
+        <div className="flex justify-center  scroll-smooth">
           <BotonVolver ruta={"/dashboard"} />
         </div>
       </div>

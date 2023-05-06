@@ -2,11 +2,11 @@ import oracledb from "oracledb";
 
 const crearCliente = async (req, res) => {
   const {
-    id_cliente_nuevo,
-    nombre_cliente,
-    tipo_cliente,
-    correo_cliente,
-    fecha_nac_cliente,
+    identificacion: id_cliente_nuevo,
+    nombre: nombre_cliente,
+    tipoCliente: tipo_cliente,
+    correo: correo_cliente,
+    fecha_nac: fecha_nac_cliente,
   } = req.body;
 
   let connection;

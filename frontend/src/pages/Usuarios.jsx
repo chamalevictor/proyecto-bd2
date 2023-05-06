@@ -25,7 +25,7 @@ const Usuarios = () => {
           className="max-w-sm rounded-lg shadow-lg"
         />
       </div>
-      <div className="flex justify-center py-6 shadow-lg scroll-smooth">
+      <div className="flex justify-center py-6  scroll-smooth">
         <BotonVolver ruta={"/dashboard"} />
       </div>
     </div>
