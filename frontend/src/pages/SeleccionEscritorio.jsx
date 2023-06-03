@@ -7,7 +7,9 @@ import Titulo from "../componentes/Titulo";
 
 const SeleccionEscritorio = () => {
   const dispatch = useDispatch();
-  const { agencias, cajas } = useSelector((state) => state.usuarios);
+  const { agencias, cajas, agenciaActual } = useSelector(
+    (state) => state.usuarios
+  );
   const [id_agencia, setIdAgencia] = useState(0);
   const [idAcaja, setIdAcaja] = useState(0);
   const [cargando, setCargando] = useState(false);
@@ -34,6 +36,7 @@ const SeleccionEscritorio = () => {
 
   useEffect(() => {
     getCajas();
+    dispatch(usuarioActions.setAgenciaActual(id_agencia));
   }, [id_agencia]);
 
   const listaAgencias =

@@ -6,6 +6,7 @@ const initialState = {
   alerta: { msg: "", error: false },
   roles: [],
   agencias: [],
+  agenciaActual: [],
   cajas: [],
 };
 
@@ -34,6 +35,9 @@ export const usuariosSlice = createSlice({
     },
     setCajas(state, action) {
       state.cajas = action.payload;
+    },
+    setAgenciaActual(state, action) {
+      state.agenciaActual = action.payload;
     },
   },
 });

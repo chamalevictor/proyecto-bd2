@@ -19,6 +19,7 @@ import CrearAgencia from "./pages/CrearAgencia";
 import AgregarCaja from "./pages/AgregarCaja";
 import Cuentas from "./pages/Cuentas";
 import SeleccionEscritorio from "./pages/SeleccionEscritorio";
+import CrearCuenta from "./pages/CrearCuenta";
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
           <Route path="servicio_al_cliente/*" element={<Outlet />}>
             <Route index element={<ServicioAlCliente />} />
             <Route path="cuentas" element={<Cuentas />} />
+            <Route path="cuentas/crear_cuenta" element={<CrearCuenta />} />
             <Route path="opciones/*" element={<Outlet />}>
               <Route index element={<OpcionesCliente />} />
               <Route path="crear" element={<CrearCliente />} />

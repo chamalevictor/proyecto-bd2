@@ -247,7 +247,7 @@ BEGIN
 
     SAVEPOINT inicio_crear_cuenta;
 
-    SELECT COUNT(*) INTO cliente_existente FROM cliente WHERE id_cliente = cliente;
+    SELECT COUNT(*) INTO cliente_existente FROM cliente WHERE no_identificacion = cliente;
 
     IF cliente_existente = 0 THEN
         RAISE cliente_no_existe;
@@ -277,7 +277,6 @@ BEGIN
     ROLLBACK TO inicio_crear_cuenta;
     RAISE;
 END;
-
 
 -- template de pruebas
 declare
@@ -323,4 +322,7 @@ BEGIN
 END;
 
 
-    Select * from cuenta;
+    Select * from cliente where id_cliente = 2076941760101;
+
+delete from cliente where id_cliente > 10;
+commit;

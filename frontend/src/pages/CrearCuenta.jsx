@@ -1,62 +1,76 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Alerta from "../../componentes/Alerta";
-import axiosClient from "../../configs/axiosClient";
-import BotonVolver from "../../componentes/BotonVolver";
+import { useSelector } from "react-redux";
+import Alerta from "../componentes/Alerta";
+import axiosClient from "../configs/axiosClient";
 
 const CrearCuenta = () => {
+  const { agenciaActual } = useSelector((state) => state.usuarios);
+
   const navigate = useNavigate();
   const [tipoCuenta, setTipoCuenta] = useState(0);
-  const [idCliente, setIdCliente] = useState(0);
+  const [id_cliente, setIdCliente] = useState("");
   const [alerta, setAlerta] = useState({});
+  const [visible, setVisible] = useState(false);
+  const [listadoClientes, setListadoClientes] = useState([]);
+  const [firma_1, setFirma_1] = useState("");
+  const [firma_2, setFirma_2] = useState("");
+  const [firma_3, setFirma_3] = useState("");
 
   useEffect(() => {
     setAlerta({
       msg: "",
       error: false,
     });
-  }, [nombreCompleto, correo, fecha_nac]);
+  }, [tipoCuenta]);
+
+  const crearCuenta = async () => {
+    if ([tipoCuenta].includes(0)) {
+      setAlerta({
+        msg: "Seleccione tipo de cuenta",
+        error: true,
+      });
+      return;
+    }
+    let nuevaCuenta = {
+      id_cliente,
+      tipoCuenta,
+      agenciaActual,
+      firma_1,
+      firma_2,
+      firma_3,
+    };
+    console.log(nuevaCuenta);
+    const { data } = await axiosClient.post(
+      `/servicio_al_cliente/crear_cuenta`,
+      nuevaCuenta
+    );
+
+    setAlerta({
+      msg: data.msg,
+      error: data.exito == 1 ? false : true,
+    });
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    crearCuenta();
+  };
 
-    setNombreCompleto(nombreCompleto.trim()); // Borrando espacios extras del nombre
-    if (nombreCompleto.split(" ").length > 2) {
-      // Solo debe haber 1 nombre y 1 apellido
-      setAlerta({
-        msg: "Ingresa solo un nombre y un apellido",
-        error: true,
-      });
-      return;
-    }
-
-    if ([nombreCompleto, correo].includes("")) {
-      // Checking for blank fields.
-      setAlerta({
-        msg: "Todos los campos son obligatorios",
-        error: true,
-      });
-      return;
-    }
-
+  const buscarCliente = async (e) => {
+    e.preventDefault();
     setAlerta({});
-
-    // Crear usuario en API.
-    // ! Datos para crear cliente // Modificar los datos a conveniencia
-    const nuevoCliente = {};
-    nuevoCliente.identificacion = identificacion;
-    nuevoCliente.nombre = nombreCompleto;
-    nuevoCliente.tipoCliente = tipoCliente;
-    nuevoCliente.correo = correo;
-    nuevoCliente.fecha_nac = fecha_nac;
-    console.log(nuevoCliente, " Datos nuevo cliente");
-
-    //! Limpiar los estados una vez creado el nuevo cliente
     try {
-      const { data } = await axiosClient.post(
-        `/servicio_al_cliente/crear_cliente`,
-        nuevoCliente
+      const { data } = await axiosClient.get(
+        `/servicio_al_cliente/buscar_cliente/${id_cliente}`
       );
+
+      if (data.msg != "El cliente no existente") {
+        setListadoClientes(data);
+        setVisible(true);
+      } else {
+        setListadoClientes([]);
+      }
 
       setAlerta({
         msg: data.msg,
@@ -76,110 +90,122 @@ const CrearCuenta = () => {
       <div className="md:w-2/3 lg:w-2/5 mt-6  rounded-lg">
         <div className="text-center">
           <h1 className="text-green-600 font-black text-6xl capitalize">
-            Crear Nuevo
-            <span className="text-slate-700"> Cliente</span>
+            Crear
+            <span className="text-slate-700"> Cuenta</span>
           </h1>
         </div>
-
         {msg && <Alerta alerta={alerta} />}
-
-        <form
-          onSubmit={handleSubmit}
-          className="mt-7 mb-5 bg-white rounded-lg shadow-lg px-10 pt-10 pb-3"
-        >
-          <div className="my-5">
+        <div className="my-5">
+          {!visible && (
             <label
               className="uppercase text-gray-600 block text-xl font-bold"
-              htmlFor="identificacion"
+              htmlFor="cliente"
             >
-              No. Identificacion (DPI)
+              Identificación del Cliente
             </label>
+          )}
+          {!visible && (
             <input
               type="number"
               pattern="[0-9]"
-              placeholder="Numero de DPI"
+              placeholder="Ingrese Número de DPI"
               className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
-              id="identificacion"
-              value={identificacion}
-              onChange={(e) => setIdentificacion(e.target.value)}
+              id="cliente"
+              value={id_cliente}
+              onChange={(e) => setIdCliente(e.target.value)}
             />
-          </div>
-          <div className="my-5">
-            <label
-              className="uppercase text-gray-600 block text-xl font-bold"
-              htmlFor="tipocliente"
+          )}
+        </div>
+        <div className="flex justify-end  scroll-smooth pb-2">
+          {!visible && (
+            <button
+              className="text-white text-sm bg-green-700 p-3 rounded-md uppercase font-bold hover:bg-green-800"
+              onClick={(e) => buscarCliente(e)}
             >
-              Tipo Cliente
-            </label>
-            <select
-              name="tipocliente"
-              id="tipocliente"
-              className="w-full mt-3 p-3 border-2 rounded-xl bg-gray-50 text-center"
-              onChange={(e) => setTipoCliente(e.target.value)}
-              value={tipoCliente}
+              Buscar
+            </button>
+          )}
+        </div>
+        {visible && (
+          <>
+            <form
+              onSubmit={handleSubmit}
+              className="mt-7 mb-5 bg-white rounded-lg shadow-lg px-10 pt-10 pb-3"
             >
-              <option value="">--Seleccione el tipo cliente--</option>
-              <option value={1}>Individual</option>
-              <option value={2}>Comercial</option>
-            </select>
-          </div>
-          <div className="my-5">
-            <label
-              className="uppercase text-gray-600 block text-xl font-bold"
-              htmlFor="nombrecliente"
-            >
-              Nombre Cliente
-            </label>
-            <input
-              type="text"
-              placeholder="Un nombre y un apellido"
-              className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
-              id="nombrecliente"
-              value={nombreCompleto}
-              onChange={(e) => setNombreCompleto(e.target.value)}
-            />
-          </div>
-          <div className="my-5">
-            <label
-              className="uppercase text-gray-600 block text-xl font-bold"
-              htmlFor="correo"
-            >
-              Correo Electrónico
-            </label>
-            <input
-              type="email"
-              placeholder="Correo Personal"
-              className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
-              id="correo"
-              value={correo}
-              onChange={(e) => setCorreo(e.target.value)}
-            />
-          </div>
-          <div className="my-5">
-            <label
-              className="uppercase text-gray-600 block text-xl font-bold"
-              htmlFor="fecha_nac"
-            >
-              Fecha de nacimiento
-            </label>
-            <input
-              type="date"
-              placeholder="Eorreo de registro"
-              className="w-full mt-3 p-3 border rounded-xl bg-gray-50"
-              id="fecha_nac"
-              value={fecha_nac}
-              onChange={(e) => setfecha_nac(e.target.value)}
-            />
-          </div>
-          <input
-            type="submit"
-            value="Crear usuario"
-            className="bg-green-700 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer hover:bg-green-800 transition-colors"
-          />
-        </form>
-        <div className="flex justify-center shadow-lg scroll-smooth pb-10">
+              <div className="my-5">
+                <label className="uppercase text-gray-600 block text-xl font-bold">
+                  Datos del Cliente
+                </label>
+                <p className="font-bold text-gray-600 mt-2 mb-1 ">Nombre: </p>
+                <p>{listadoClientes[0].NOMBRE || ""}</p>
+                <p className="font-bold text-gray-600 mt-2 mb-1 ">Correo: </p>
+                <p>{listadoClientes[0].CORREO || ""}</p>
+                <p className="font-bold text-gray-600 mt-2 mb-1 ">
+                  Fecha Nacimiento:{" "}
+                </p>
+                <p>{listadoClientes[0].FECHA_NAC.split("T")[0] || ""}</p>
+              </div>
+              <div className="my-5">
+                <label
+                  className="uppercase text-gray-600 block text-xl font-bold"
+                  htmlFor="tipo-cuenta"
+                >
+                  Tipo de Cuenta
+                </label>
+                <select
+                  name="tipo-cuenta"
+                  id="tipo-cuenta"
+                  className="w-full mt-3 p-3 border-2 rounded-xl bg-gray-50 text-center"
+                  onChange={(e) => setTipoCuenta(e.target.value)}
+                  value={tipoCuenta}
+                >
+                  <option value="">--Seleccione el Tipo de Cuenta--</option>
+                  <option value={1}>Monetaria</option>
+                  <option value={2}>Ahorro</option>
+                </select>
+              </div>
+              <label
+                className="uppercase text-gray-600 block text-xl font-bold"
+                htmlFor="tipo-cuenta"
+              >
+                Firmas
+              </label>
+              <input
+                type="text"
+                placeholder="Firma 1"
+                className="w-full my-3 p-3 border rounded-xl bg-gray-50"
+                id="firma-1"
+                value={firma_1}
+                onChange={(e) => setFirma_1(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Firma 2"
+                className="w-full my-3 p-3 border rounded-xl bg-gray-50"
+                id="firma-2"
+                value={firma_2}
+                onChange={(e) => setFirma_2(e.target.value)}
+              />
+              <input
+                type="text"
+                placeholder="Firma 3"
+                className="w-full mt-3 mb-4 p-3 border rounded-xl bg-gray-50"
+                id="firma-3"
+                value={firma_3}
+                onChange={(e) => setFirma_3(e.target.value)}
+              />
+              <input
+                type="submit"
+                value="Crear Cuenta"
+                className="bg-green-700 mb-5 w-full py-3 text-white uppercase font-bold rounded hover:cursor-pointer hover:bg-green-800 transition-colors"
+              />
+            </form>
+          </>
+        )}
+
+        <div className="flex justify-center  scroll-smooth pb-10">
           <button
-            className="text-white text-sm bg-green-600 p-3 rounded-md uppercase font-bold hover:bg-green-700"
+            className="text-white text-sm bg-green-700 p-3 rounded-md uppercase font-bold hover:bg-green-800"
             onClick={() => navigate(-1)}
           >
             Volver
